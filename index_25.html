@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Operations — Warehouse Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#14100D;
+    --ink-soft:#241C17;
+    --surface:#1E1712;
+    --surface-raised:#28201A;
+    --amber:#F0AE4D;
+    --steel:#5B9BD1;
+    --steel-light:#8DBEE0;
+    --alert:#E2645B;
+    --text:#F0E9E3;
+    --text-muted:#A99B8E;
+    --line:#5C4E43;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--surface);
+    color:var(--text);
+    font-family:'IBM Plex Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .display{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:0.02em;}
+
+  /* ---- Header / Manifest band ---- */
+  header{
+    background:var(--ink);
+    color:#fff;
+    padding:2.5rem 2rem 0 2rem;
+    position:relative;
+    overflow:hidden;
+    background-image:
+      linear-gradient(var(--ink-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ink-soft) 1px, transparent 1px);
+    background-size:40px 40px;
+    background-position:-1px -1px;
+  }
+  header::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(20,16,13,0.2) 0%, var(--ink) 85%);
+  }
+  .header-inner{position:relative; z-index:1; max-width:1240px; margin:0 auto;}
+  .eyebrow-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem;
+    color:#9FB3C8; letter-spacing:0.08em; text-transform:uppercase;
+    border-bottom:1px solid rgba(255,255,255,0.15);
+    padding-bottom:0.9rem; flex-wrap:wrap; gap:0.5rem;
+  }
+  .title-row{display:flex; justify-content:space-between; align-items:flex-end; gap:2rem; padding:1.6rem 0 2rem; flex-wrap:wrap;}
+  h1{
+    font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+    font-size:clamp(2.1rem,5vw,3.4rem); letter-spacing:0.01em; line-height:0.95;
+  }
+  h1 span{color:var(--amber);}
+  .subtitle{color:#B7C4D1; font-size:0.95rem; max-width:34ch; margin-top:0.6rem;}
+
+  .stamp{
+    border:2px solid var(--amber);
+    color:var(--amber);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:0.55rem 0.8rem;
+    transform:rotate(-3deg);
+    white-space:nowrap;
+    flex-shrink:0;
+    background:rgba(232,163,61,0.06);
+  }
+  .stamp b{display:block; font-size:0.95rem; color:#fff; letter-spacing:0.03em;}
+
+  /* ---- KPI manifest strip ---- */
+  .kpi-strip{
+    position:relative; z-index:1; max-width:1240px; margin:0 auto;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+    border-top:1px solid rgba(255,255,255,0.15);
+  }
+  .kpi{
+    padding:1.4rem 1.2rem;
+    border-right:1px solid rgba(255,255,255,0.12);
+  }
+  .kpi:last-child{border-right:none;}
+  .kpi .label{
+    font-family:'IBM Plex Mono',monospace; font-size:0.66rem; letter-spacing:0.07em;
+    text-transform:uppercase; color:#9FB3C8; margin-bottom:0.4rem;
+  }
+  .kpi .value{
+    font-family:'IBM Plex Mono',monospace; font-weight:600;
+    font-size:clamp(1.3rem,2.4vw,1.7rem); color:#fff;
+  }
+  .kpi .value.alert{color:var(--amber);}
+
+  /* ---- Nav tabs ---- */
+  nav{
+    background:var(--surface-raised);
+    border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:10;
+  }
+  .nav-inner{max-width:1240px; margin:0 auto; display:flex; gap:0.2rem; padding:0 2rem; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .tab{
+    font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:0.04em;
+    font-size:0.85rem; font-weight:500; color:var(--text-muted);
+    background:none; border:none; cursor:pointer;
+    padding:1rem 1.1rem; border-bottom:3px solid transparent;
+    transition:color 0.15s, border-color 0.15s;
+  }
+  .tab:hover{color:var(--text);}
+  .tab.active{color:var(--text); border-bottom-color:var(--amber);}
+
+  main{max-width:1240px; margin:0 auto; padding:2rem;}
+  .page{display:none;}
+  .page.active{display:block; animation:fadein 0.25s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  .grid{display:grid; gap:1.25rem;}
+  .grid-2{grid-template-columns:1.5fr 1fr;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  @media(max-width:860px){.grid-2, .grid-3{grid-template-columns:1fr;}}
+  @media(max-width:600px){
+    .header-inner{padding:0;}
+    header{padding:1.1rem 0.85rem 0;}
+    .eyebrow-row{font-size:0.6rem; padding-bottom:0.7rem;}
+    h1{font-size:1.9rem;}
+    .subtitle{font-size:0.85rem;}
+    .title-row{padding:1.1rem 0 1.4rem; gap:1rem;}
+    .kpi-strip{grid-template-columns:repeat(2,1fr);}
+    .kpi{padding:0.9rem 0.7rem;}
+    .kpi .value{font-size:1.25rem;}
+    .nav-inner{padding:0 0.85rem;}
+    .tab{font-size:0.75rem; padding:0.8rem 0.7rem;}
+    main{padding:1rem 0.85rem;}
+    .card{padding:1rem 1rem 1.2rem;}
+    .card-head{flex-direction:column; align-items:flex-start; gap:0.2rem;}
+    canvas{max-height:220px;}
+    table{font-size:0.76rem;}
+    th, td{padding:0.4rem 0.45rem;}
+    .stamp{transform:none;}
+    footer{padding:1.4rem 0.85rem; flex-direction:column; gap:0.4rem;}
+    .pipeline{flex-direction:column; align-items:stretch;}
+    .pipeline .step{font-size:0.7rem; padding:0.5rem 0.7rem; white-space:normal;}
+    .pipeline .arrow{transform:rotate(90deg); align-self:center; padding:0.1rem 0;}
+  }
+
+  .card{
+    background:var(--surface-raised);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:1.3rem 1.4rem 1.5rem;
+  }
+  .card-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom:1rem; padding-bottom:0.7rem; border-bottom:1px solid var(--line);
+  }
+  .card-head h3{
+    font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:1rem;
+    letter-spacing:0.03em; font-weight:600;
+  }
+  .card-head .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--text-muted);
+    text-transform:uppercase; letter-spacing:0.05em;
+  }
+  canvas{max-height:320px;}
+
+  .table-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  table{width:100%; border-collapse:collapse; font-size:0.85rem; min-width:340px;}
+  th{
+    font-family:'IBM Plex Mono',monospace; font-size:0.66rem; text-transform:uppercase;
+    letter-spacing:0.05em; color:var(--text-muted); text-align:left;
+    padding:0.5rem 0.6rem; border-bottom:2px solid var(--text);
+  }
+  td{padding:0.55rem 0.6rem; border-bottom:1px solid var(--line); font-family:'IBM Plex Mono',monospace; font-size:0.82rem;}
+  tr td:first-child{font-family:'IBM Plex Sans',sans-serif; font-size:0.85rem;}
+  .num{text-align:right;}
+  .risk-low{color:var(--alert); font-weight:600;}
+
+  .matrix-table td, .matrix-table th{text-align:center;}
+  .matrix-table td:first-child, .matrix-table th:first-child{text-align:left;}
+  .heat{color:#fff; font-weight:600; border-radius:2px;}
+
+  footer{
+    max-width:1240px; margin:0 auto; padding:2rem; color:var(--text-muted);
+    font-family:'IBM Plex Mono',monospace; font-size:0.75rem; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;
+  }
+  footer a{color:var(--steel);}
+
+  .pipeline{
+    display:flex; align-items:center; gap:0; margin:1.5rem 0 0.5rem;
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; flex-wrap:wrap;
+  }
+  .pipeline .step{
+    background:var(--surface-raised); border:1px solid var(--line);
+    padding:0.5rem 0.8rem; color:var(--text); white-space:nowrap;
+  }
+  .pipeline .arrow{color:var(--steel-light); padding:0 0.4rem; font-size:1rem;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="eyebrow-row">
+      <span>MANIFEST NO. IW-2024-2025 · 6 DISTRIBUTION CENTERS · KENYA REGION</span>
+      <span id="asof">DATA THROUGH —</span>
+    </div>
+    <div class="title-row">
+      <div>
+        <h1>Inventory <span>Operations</span></h1>
+        <p class="subtitle">A live warehouse analytics dashboard built on a Python → PostgreSQL → dbt pipeline, tracking stock movement, turnover, and stockout risk across 6 distribution centers.</p>
+      </div>
+    </div>
+    <div class="kpi-strip" id="kpiStrip"></div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="tab active" data-page="overview">Overview</button>
+    <button class="tab" data-page="warehouses">Warehouses</button>
+    <button class="tab" data-page="products">Suppliers &amp; Products</button>
+    <button class="tab" data-page="pipeline">Pipeline</button>
+  </div>
+</nav>
+
+<main>
+
+  <section class="page active" id="page-overview">
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-head"><h3>Stock Movement Trend</h3><span class="tag">Monthly · Inbound vs Outbound</span></div>
+        <canvas id="trendChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Movement Type Split</h3><span class="tag">Share of Total Volume</span></div>
+        <canvas id="movementChart"></canvas>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:1.25rem;">
+      <div class="card">
+        <div class="card-head"><h3>Current Stock by Warehouse</h3><span class="tag">Latest Snapshot</span></div>
+        <canvas id="warehouseChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Stockout Risk</h3><span class="tag">Lowest Stock vs Reorder Point</span></div>
+        <div class="table-scroll"><table id="riskTable"><thead><tr><th>Product</th><th class="num">Stock</th><th class="num">Reorder At</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="page-warehouses">
+    <div class="card">
+      <div class="card-head"><h3>Stock by Category &amp; Warehouse</h3><span class="tag">Units On Hand</span></div>
+      <div class="table-scroll"><table class="matrix-table" id="matrixTable"></table></div>
+    </div>
+  </section>
+
+  <section class="page" id="page-products">
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-head"><h3>Slowest-Moving Products</h3><span class="tag">By Turnover Rate</span></div>
+        <div class="table-scroll"><table id="moversTable"><thead><tr><th>Product</th><th>Category</th><th class="num">Units Out</th><th class="num">Turnover</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Lead Time vs Turnover</h3><span class="tag">Per Product, by Supplier</span></div>
+        <canvas id="scatterChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="page-pipeline">
+    <div class="card">
+      <div class="card-head"><h3>Data Pipeline</h3><span class="tag">Raw → Star Schema → Report</span></div>
+      <div class="pipeline">
+        <div class="step">01 · Python + Faker<br>Synthetic data</div><span class="arrow">→</span>
+        <div class="step">02 · PostgreSQL<br>Raw landing zone</div><span class="arrow">→</span>
+        <div class="step">03 · dbt<br>Staging + cleaning</div><span class="arrow">→</span>
+        <div class="step">04 · dbt<br>Star schema marts</div><span class="arrow">→</span>
+        <div class="step">05 · Report<br>Power BI / Web</div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:0.9rem; color:var(--text-muted); max-width:60ch; line-height:1.6;">
+        Raw data intentionally includes messiness — duplicate SKUs and missing supplier references — cleaned in the dbt staging layer.
+        All 30 dbt tests (uniqueness, not-null, referential integrity) pass against the resulting star schema of 5 dimension tables and 2 fact tables.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>Built with Python · PostgreSQL · dbt · Chart.js</span>
+  <span>Vincent Kimutai — <a href="https://github.com/vinhabibi" target="_blank">github.com/vinhabibi</a></span>
+</footer>
+
+<script>
+const DATA = {"kpis": {"totalIn": 1433476, "totalOut": 1267441, "currentStock": 117382, "inventoryValue": 22467064.0, "turnoverRate": 15.89, "daysOnHand": 67.7, "stockoutCount": 6, "warehouseCount": 6, "productCount": 120, "supplierCount": 15}, "monthlyTrend": [{"label": "2024-01", "inbound": 59568, "outbound": 58635}, {"label": "2024-02", "inbound": 59612, "outbound": 53025}, {"label": "2024-03", "inbound": 64109, "outbound": 53875}, {"label": "2024-04", "inbound": 50436, "outbound": 47646}, {"label": "2024-05", "inbound": 61403, "outbound": 47478}, {"label": "2024-06", "inbound": 54734, "outbound": 51025}, {"label": "2024-07", "inbound": 61657, "outbound": 59080}, {"label": "2024-08", "inbound": 62457, "outbound": 50562}, {"label": "2024-09", "inbound": 54981, "outbound": 57182}, {"label": "2024-10", "inbound": 66375, "outbound": 53013}, {"label": "2024-11", "inbound": 56520, "outbound": 49133}, {"label": "2024-12", "inbound": 59676, "outbound": 55815}, {"label": "2025-01", "inbound": 59823, "outbound": 54721}, {"label": "2025-02", "inbound": 54945, "outbound": 43736}, {"label": "2025-03", "inbound": 58901, "outbound": 52818}, {"label": "2025-04", "inbound": 54691, "outbound": 45984}, {"label": "2025-05", "inbound": 60786, "outbound": 55152}, {"label": "2025-06", "inbound": 64890, "outbound": 58395}, {"label": "2025-07", "inbound": 62127, "outbound": 60037}, {"label": "2025-08", "inbound": 71133, "outbound": 54745}, {"label": "2025-09", "inbound": 57401, "outbound": 51594}, {"label": "2025-10", "inbound": 55869, "outbound": 50990}, {"label": "2025-11", "inbound": 62514, "outbound": 50258}, {"label": "2025-12", "inbound": 58868, "outbound": 52542}], "warehouseStock": [{"name": "Mombasa Distribution Center", "value": 24271}, {"name": "Nakuru Distribution Center", "value": 23901}, {"name": "Kisumu Distribution Center", "value": 22218}, {"name": "Thika Distribution Center", "value": 19425}, {"name": "Eldoret Distribution Center", "value": 14139}, {"name": "Nairobi Distribution Center", "value": 13428}], "movementBreakdown": [{"name": "adjustment", "value": 60974}, {"name": "inbound", "value": 1433476}, {"name": "outbound", "value": 1267441}, {"name": "return", "value": 157972}, {"name": "transfer", "value": 251088}], "matrix": {"categories": ["Apparel", "Electronics", "Home & Kitchen", "Office Supplies", "Tools & Hardware"], "warehouses": ["Eldoret Distribution Center", "Kisumu Distribution Center", "Mombasa Distribution Center", "Nairobi Distribution Center", "Nakuru Distribution Center", "Thika Distribution Center"], "data": [[4553, 712, 2955, 1244, 2754, 4136], [3143, 3931, 5354, 3317, 4539, 4268], [3451, 7697, 4561, 4218, 4736, 5586], [2750, 5786, 6051, 2875, 6036, 3553], [242, 4092, 5350, 1774, 5836, 1882]]}, "slowMovers": [{"name": "Top Component", "category": "Electronics", "turnover": 6.9, "unitsOut": 8277}, {"name": "Not Storage", "category": "Home & Kitchen", "turnover": 8.24, "unitsOut": 7517}, {"name": "Discuss Fastener", "category": "Tools & Hardware", "turnover": 8.27, "unitsOut": 6898}, {"name": "Traditional Writing", "category": "Office Supplies", "turnover": 8.4, "unitsOut": 7719}, {"name": "Arrive Footwear", "category": "Apparel", "turnover": 8.59, "unitsOut": 8651}, {"name": "Later Power Tool", "category": "Tools & Hardware", "turnover": 9.77, "unitsOut": 9832}, {"name": "Traditional Power Tool", "category": "Tools & Hardware", "turnover": 9.94, "unitsOut": 8883}, {"name": "Hundred Cookware", "category": "Home & Kitchen", "turnover": 10.1, "unitsOut": 8731}, {"name": "Expect Hand Tool", "category": "Tools & Hardware", "turnover": 10.15, "unitsOut": 8572}, {"name": "Fall Component", "category": "Electronics", "turnover": 10.22, "unitsOut": 8665}], "stockoutRisk": [{"name": "Garden Cookware", "stock": 0, "reorder": 64}, {"name": "Wish Cookware", "stock": 0, "reorder": 19}, {"name": "Result Outerwear", "stock": 0, "reorder": 43}, {"name": "Example Writing", "stock": 0, "reorder": 12}, {"name": "Character Hand Tool", "stock": 0, "reorder": 28}, {"name": "Attorney Component", "stock": 0, "reorder": 89}, {"name": "Response Accessorie", "stock": 13, "reorder": 87}, {"name": "Forward Furniture", "stock": 13, "reorder": 77}, {"name": "Someone Small Appliance", "stock": 26, "reorder": 10}, {"name": "Newspaper Component", "stock": 57, "reorder": 50}], "leadTimeScatter": [{"name": "Spring Cookware", "leadTime": 21.7, "turnover": 14.33}, {"name": "Figure Outerwear", "leadTime": 21.9, "turnover": 17.77}, {"name": "Base Component", "leadTime": 22.6, "turnover": 16.8}, {"name": "Top Component", "leadTime": 20.6, "turnover": 6.9}, {"name": "Early Hand Tool", "leadTime": 21.6, "turnover": 17.46}, {"name": "Trial Paper Good", "leadTime": 20.8, "turnover": 13.76}, {"name": "Blood Writing", "leadTime": 23.5, "turnover": 22.36}, {"name": "Husband Paper Good", "leadTime": 21.8, "turnover": 15.42}, {"name": "Fall Component", "leadTime": 20.2, "turnover": 10.22}, {"name": "Long Storage", "leadTime": 20.7, "turnover": 14.36}, {"name": "Prove Hand Tool", "leadTime": 21.5, "turnover": 14.77}, {"name": "They Cookware", "leadTime": 20.4, "turnover": 31.43}, {"name": "His Small Appliance", "leadTime": 21.9, "turnover": 22.27}, {"name": "Commercial Footwear", "leadTime": 20.0, "turnover": 50.95}, {"name": "Hospital Paper Good", "leadTime": 22.4, "turnover": 15.97}, {"name": "Determine Small Appliance", "leadTime": 21.1, "turnover": 16.22}, {"name": "Religious Small Appliance", "leadTime": 21.5, "turnover": 22.12}, {"name": "Example Accessorie", "leadTime": 20.5, "turnover": 13.23}, {"name": "Science Furniture", "leadTime": 21.7, "turnover": 20.4}, {"name": "Write Power Tool", "leadTime": 21.4, "turnover": 17.65}, {"name": "Result Outerwear", "leadTime": 20.0, "turnover": 29.19}, {"name": "Away Furniture", "leadTime": 21.1, "turnover": 24.5}, {"name": "Politics Small Appliance", "leadTime": 20.2, "turnover": 14.72}, {"name": "Prove Power Tool", "leadTime": 22.0, "turnover": 29.57}, {"name": "Congress Paper Good", "leadTime": 20.6, "turnover": 13.23}, {"name": "None Component", "leadTime": 21.5, "turnover": 12.54}, {"name": "Shoulder Cookware", "leadTime": 22.2, "turnover": 16.24}, {"name": "Election Furniture", "leadTime": 21.4, "turnover": 17.36}, {"name": "Common Fastener", "leadTime": 21.0, "turnover": 18.67}, {"name": "Maintain Writing", "leadTime": 21.9, "turnover": 13.33}, {"name": "Hundred Cookware", "leadTime": 21.3, "turnover": 10.1}, {"name": "Expect Hand Tool", "leadTime": 21.1, "turnover": 10.15}, {"name": "Wish Cookware", "leadTime": 20.9, "turnover": 21.54}, {"name": "Push Hand Tool", "leadTime": 21.9, "turnover": 15.63}, {"name": "Rise Small Appliance", "leadTime": 20.8, "turnover": 17.43}, {"name": "Onto Storage", "leadTime": 21.0, "turnover": 20.98}, {"name": "Discuss Footwear", "leadTime": 21.5, "turnover": 12.79}, {"name": "Reveal Audio", "leadTime": 18.1, "turnover": 17.69}, {"name": "Garden Cookware", "leadTime": 21.7, "turnover": 20.38}, {"name": "Threat Storage", "leadTime": 20.9, "turnover": 18.21}, {"name": "Special Accessorie", "leadTime": 21.9, "turnover": 21.75}, {"name": "Stand Audio", "leadTime": 21.6, "turnover": 14.83}, {"name": "Arrive Footwear", "leadTime": 21.8, "turnover": 8.59}, {"name": "Drop Storage", "leadTime": 19.4, "turnover": 23.89}, {"name": "Term Writing", "leadTime": 20.3, "turnover": 56.64}, {"name": "Almost Outerwear", "leadTime": 22.1, "turnover": 12.03}, {"name": "Support Fastener", "leadTime": 19.6, "turnover": 10.81}, {"name": "Four Component", "leadTime": 21.2, "turnover": 36.69}, {"name": "Institution Cookware", "leadTime": 22.4, "turnover": 15.36}, {"name": "Executive Component", "leadTime": 20.5, "turnover": 16.16}, {"name": "Attorney Component", "leadTime": 20.8, "turnover": 15.12}, {"name": "Development Accessorie", "leadTime": 21.7, "turnover": 14.49}, {"name": "White Paper Good", "leadTime": 20.9, "turnover": 37.54}, {"name": "Yes Outerwear", "leadTime": 22.6, "turnover": 16.65}, {"name": "Our Audio", "leadTime": 20.7, "turnover": 15.3}, {"name": "Under Component", "leadTime": 21.6, "turnover": 23.84}, {"name": "Serious Audio", "leadTime": 20.5, "turnover": 23.52}, {"name": "Forward Furniture", "leadTime": 21.4, "turnover": 25.79}, {"name": "Difference Component", "leadTime": 20.5, "turnover": 15.09}, {"name": "Reality Audio", "leadTime": 21.8, "turnover": 46.33}, {"name": "Money Storage", "leadTime": 21.5, "turnover": 17.23}, {"name": "Individual Small Appliance", "leadTime": 22.0, "turnover": 46.65}, {"name": "Usually Paper Good", "leadTime": 22.7, "turnover": 32.51}, {"name": "Who Audio", "leadTime": 20.2, "turnover": 16.92}, {"name": "Question Small Appliance", "leadTime": 21.1, "turnover": 13.88}, {"name": "Low Audio", "leadTime": 21.2, "turnover": 12.1}, {"name": "Character Hand Tool", "leadTime": 21.2, "turnover": 14.72}, {"name": "Evidence Outerwear", "leadTime": 22.4, "turnover": 17.41}, {"name": "Chair Paper Good", "leadTime": 18.8, "turnover": 17.89}, {"name": "Employee Power Tool", "leadTime": 21.5, "turnover": 29.86}, {"name": "Size Cookware", "leadTime": 21.2, "turnover": 17.34}, {"name": "Option Accessorie", "leadTime": 20.7, "turnover": 15.61}, {"name": "Nothing Small Appliance", "leadTime": 20.1, "turnover": 16.43}, {"name": "Everyone Cookware", "leadTime": 21.8, "turnover": 19.05}, {"name": "Skin Cookware", "leadTime": 20.5, "turnover": 12.82}, {"name": "Pattern Paper Good", "leadTime": 20.0, "turnover": 21.68}, {"name": "Later Power Tool", "leadTime": 19.8, "turnover": 9.77}, {"name": "Water Audio", "leadTime": 19.3, "turnover": 49.16}, {"name": "Past Paper Good", "leadTime": 20.5, "turnover": 24.38}, {"name": "Inside Accessorie", "leadTime": 21.0, "turnover": 16.09}]};
+
+document.getElementById('asof').textContent = 'DATA THROUGH ' + (DATA.monthlyTrend.at(-1)?.label || '—');
+
+// ---- KPI strip ----
+const kpiDefs = [
+  {label:'Current Stock', value: DATA.kpis.currentStock.toLocaleString()},
+  {label:'Inventory Value', value: '$' + (DATA.kpis.inventoryValue/1e6).toFixed(2) + 'M'},
+  {label:'Turnover Rate', value: DATA.kpis.turnoverRate + 'x'},
+  {label:'Days on Hand', value: DATA.kpis.daysOnHand},
+  {label:'Stockouts', value: DATA.kpis.stockoutCount, alert:true},
+  {label:'Warehouses', value: DATA.kpis.warehouseCount},
+  {label:'Products', value: DATA.kpis.productCount},
+  {label:'Suppliers', value: DATA.kpis.supplierCount},
+];
+document.getElementById('kpiStrip').innerHTML = kpiDefs.map(k =>
+  `<div class="kpi"><div class="label">${k.label}</div><div class="value${k.alert?' alert':''}">${k.value}</div></div>`
+).join('');
+
+// ---- Tabs ----
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('page-'+tab.dataset.page).classList.add('active');
+  });
+});
+
+const palette = { steel:'#5B9BD1', amber:'#F0AE4D', alert:'#E2645B', steelLight:'#8DBEE0', ink:'#14100D', grid:'#5C4E43' };
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#A99B8E';
+
+const isMobile = window.innerWidth < 600;
+const chartAspect = isMobile ? 1.15 : 2;
+
+// Trend chart
+new Chart(document.getElementById('trendChart'), {
+  type:'line',
+  data:{
+    labels: DATA.monthlyTrend.map(d=>d.label),
+    datasets:[
+      {label:'Inbound', data:DATA.monthlyTrend.map(d=>d.inbound), borderColor:palette.steel, backgroundColor:palette.steel, tension:0.3, pointRadius:2, borderWidth:2},
+      {label:'Outbound', data:DATA.monthlyTrend.map(d=>d.outbound), borderColor:palette.amber, backgroundColor:palette.amber, tension:0.3, pointRadius:2, borderWidth:2},
+    ]
+  },
+  options:{responsive:true, maintainAspectRatio:true, aspectRatio:chartAspect, plugins:{legend:{position:'bottom', labels:{boxWidth:12}}}, scales:{y:{grid:{color:palette.grid}}, x:{grid:{display:false}}}}
+});
+
+// Movement doughnut
+new Chart(document.getElementById('movementChart'), {
+  type:'doughnut',
+  data:{
+    labels: DATA.movementBreakdown.map(d=>d.name),
+    datasets:[{data: DATA.movementBreakdown.map(d=>d.value), backgroundColor:[palette.steel, palette.amber, palette.steelLight, palette.alert, '#8D99A6'], borderColor:'#28201A', borderWidth:2}]
+  },
+  options:{responsive:true, aspectRatio:chartAspect, plugins:{legend:{position:'bottom', labels:{boxWidth:12}}}}
+});
+
+// Warehouse bar
+new Chart(document.getElementById('warehouseChart'), {
+  type:'bar',
+  data:{
+    labels: DATA.warehouseStock.map(d=>d.name.replace(' Distribution Center','')),
+    datasets:[{data: DATA.warehouseStock.map(d=>d.value), backgroundColor:palette.steel}]
+  },
+  options:{indexAxis:'y', responsive:true, aspectRatio:chartAspect, plugins:{legend:{display:false}}, scales:{x:{grid:{color:palette.grid}}, y:{grid:{display:false}}}}
+});
+
+// Risk table
+const riskBody = document.querySelector('#riskTable tbody');
+DATA.stockoutRisk.forEach(r=>{
+  const isLow = r.stock <= r.reorder;
+  riskBody.innerHTML += `<tr><td>${r.name}</td><td class="num${isLow?' risk-low':''}">${r.stock}</td><td class="num">${r.reorder}</td></tr>`;
+});
+
+// Matrix table
+const mt = DATA.matrix;
+const max = Math.max(...mt.data.flat());
+function heatColor(v){
+  const t = v/max;
+  const r = Math.round(40 - t*(40-47));
+  const g = Math.round(32 - t*(32-93));
+  const b = Math.round(26 - t*(26-138));
+  return `rgb(${r},${g},${b})`;
+}
+let mtHtml = '<thead><tr><th>Category</th>' + mt.warehouses.map(w=>`<th>${w.replace(' Distribution Center','')}</th>`).join('') + '</tr></thead><tbody>';
+mt.categories.forEach((cat,i)=>{
+  mtHtml += `<tr><td>${cat}</td>` + mt.data[i].map(v=>{
+    const bg = heatColor(v);
+    return `<td class="heat" style="background:${bg}; color:#F0E9E3">${v.toLocaleString()}</td>`;
+  }).join('') + '</tr>';
+});
+mtHtml += '</tbody>';
+document.getElementById('matrixTable').innerHTML = mtHtml;
+
+// Movers table
+const moversBody = document.querySelector('#moversTable tbody');
+DATA.slowMovers.forEach(m=>{
+  moversBody.innerHTML += `<tr><td>${m.name}</td><td>${m.category}</td><td class="num">${m.unitsOut.toLocaleString()}</td><td class="num">${m.turnover}</td></tr>`;
+});
+
+// Scatter
+new Chart(document.getElementById('scatterChart'), {
+  type:'scatter',
+  data:{datasets:[{
+    label:'Products',
+    data: DATA.leadTimeScatter.map(d=>({x:d.leadTime, y:d.turnover})),
+    backgroundColor:'rgba(91,155,209,0.55)',
+    borderColor: palette.steel,
+  }]},
+  options:{
+    responsive:true,
+    aspectRatio:chartAspect,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>`Lead time ${ctx.parsed.x}d, turnover ${ctx.parsed.y}x`}}},
+    scales:{
+      x:{title:{display:true,text:'Supplier Lead Time (days)'}, grid:{color:palette.grid}},
+      y:{title:{display:true,text:'Stock Turnover Rate'}, grid:{color:palette.grid}}
+    }
+  }
+});
+</script>
+</body>
+</html>
