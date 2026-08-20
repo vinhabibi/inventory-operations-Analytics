@@ -1,0 +1,15 @@
+# Copy this to ~/.dbt/profiles.yml (create the folder if it doesn't exist),
+# or merge it into your existing profiles.yml if you already use dbt elsewhere.
+
+warehouse:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      port: 5432
+      user: postgres
+      password: your_password_here
+      dbname: datasciencedb
+      schema: dbt_dev
+      threads: 4

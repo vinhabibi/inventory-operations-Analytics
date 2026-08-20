@@ -1,0 +1,85 @@
+version: 2
+
+models:
+  - name: dim_date
+    columns:
+      - name: date_key
+        tests: [unique, not_null]
+
+  - name: dim_warehouse
+    columns:
+      - name: warehouse_key
+        tests: [unique, not_null]
+
+  - name: dim_supplier
+    columns:
+      - name: supplier_key
+        tests: [unique, not_null]
+
+  - name: dim_product
+    columns:
+      - name: product_key
+        tests: [unique, not_null]
+      - name: sku
+        tests: [unique, not_null]
+
+  - name: dim_movement_type
+    columns:
+      - name: movement_type_key
+        tests: [unique, not_null]
+
+  - name: fact_inventory_movement
+    columns:
+      - name: movement_id
+        tests: [unique, not_null]
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+      - name: product_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+      - name: warehouse_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_warehouse')
+              field: warehouse_key
+      - name: supplier_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_supplier')
+              field: supplier_key
+      - name: movement_type_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_movement_type')
+              field: movement_type_key
+
+  - name: fact_stock_snapshot
+    columns:
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+      - name: product_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+      - name: warehouse_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_warehouse')
+              field: warehouse_key

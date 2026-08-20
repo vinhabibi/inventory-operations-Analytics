@@ -1,0 +1,125 @@
+product_key,sku,product_name,category,subcategory,unit_cost,unit_price,reorder_point
+1,SKU-1001,Spring Cookware,Home & Kitchen,Cookware,382.97,627.14,21
+2,SKU-1002,Figure Outerwear,Apparel,Outerwear,144.87,238.62,43
+3,SKU-1003,Base Component,Electronics,Components,184.85,251.82,58
+4,SKU-1004,Top Component,Electronics,Components,118.68,239.41,56
+5,SKU-1005,Early Hand Tool,Tools & Hardware,Hand Tools,282.42,355.73,39
+6,SKU-1006,Trial Paper Good,Office Supplies,Paper Goods,342.42,796.62,58
+7,SKU-1007,Blood Writing,Office Supplies,Writing,255.0,426.94,57
+8,SKU-1008,Husband Paper Good,Office Supplies,Paper Goods,268.73,567.66,97
+9,SKU-1009,Fall Component,Electronics,Components,254.72,482.54,41
+10,SKU-1010,Long Storage,Home & Kitchen,Storage,153.02,380.47,91
+11,SKU-1011,Prove Hand Tool,Tools & Hardware,Hand Tools,274.48,630.13,17
+12,SKU-1012,They Cookware,Home & Kitchen,Cookware,322.41,555.03,18
+13,SKU-1013,His Small Appliance,Home & Kitchen,Small Appliances,350.79,564.45,93
+14,SKU-1014,Commercial Footwear,Apparel,Footwear,354.1,720.84,28
+15,SKU-1015,Hospital Paper Good,Office Supplies,Paper Goods,100.16,193.29,43
+16,SKU-1016,Hear Power Tool,Tools & Hardware,Power Tools,359.33,617.77,38
+17,SKU-1017,Determine Small Appliance,Home & Kitchen,Small Appliances,198.42,433.05,24
+18,SKU-1018,Religious Small Appliance,Home & Kitchen,Small Appliances,65.67,136.9,86
+19,SKU-1019,Example Accessorie,Electronics,Accessories,153.88,383.92,77
+20,SKU-1020,Science Furniture,Office Supplies,Furniture,344.59,418.65,24
+21,SKU-1021,Write Power Tool,Tools & Hardware,Power Tools,307.9,505.64,47
+22,SKU-1022,Result Outerwear,Apparel,Outerwear,182.58,445.49,43
+23,SKU-1023,Raise Hand Tool,Tools & Hardware,Hand Tools,204.06,273.1,90
+24,SKU-1024,Away Furniture,Office Supplies,Furniture,204.05,297.62,57
+25,SKU-1025,Politics Small Appliance,Home & Kitchen,Small Appliances,381.49,915.26,10
+26,SKU-1026,Prove Power Tool,Tools & Hardware,Power Tools,196.47,264.34,56
+27,SKU-1027,Congress Paper Good,Office Supplies,Paper Goods,25.05,58.65,20
+28,SKU-1028,None Component,Electronics,Components,195.42,252.09,78
+29,SKU-1029,Shoulder Cookware,Home & Kitchen,Cookware,264.58,643.17,31
+30,SKU-1030,Election Furniture,Office Supplies,Furniture,349.23,611.18,37
+31,SKU-1031,Common Fastener,Tools & Hardware,Fasteners,276.57,588.22,61
+32,SKU-1032,Maintain Writing,Office Supplies,Writing,360.05,643.38,41
+33,SKU-1033,Hundred Cookware,Home & Kitchen,Cookware,136.56,268.31,39
+34,SKU-1034,Expect Hand Tool,Tools & Hardware,Hand Tools,4.86,10.3,17
+35,SKU-1035,Wish Cookware,Home & Kitchen,Cookware,362.36,839.78,19
+36,SKU-1036,Push Hand Tool,Tools & Hardware,Hand Tools,112.83,206.6,79
+37,SKU-1037,Rise Small Appliance,Home & Kitchen,Small Appliances,374.33,727.08,70
+38,SKU-1038,Onto Storage,Home & Kitchen,Storage,323.38,468.1,22
+39,SKU-1039,Discuss Footwear,Apparel,Footwear,170.58,308.26,16
+40,SKU-1040,Reveal Audio,Electronics,Audio,162.24,266.25,23
+41,SKU-1041,Garden Cookware,Home & Kitchen,Cookware,77.7,138.55,64
+42,SKU-1042,Threat Storage,Home & Kitchen,Storage,186.13,434.95,19
+43,SKU-1043,Special Accessorie,Apparel,Accessories,40.97,83.9,79
+44,SKU-1044,Stand Audio,Electronics,Audio,370.69,853.81,31
+45,SKU-1045,Arrive Footwear,Apparel,Footwear,193.58,449.89,17
+46,SKU-1046,Drop Storage,Home & Kitchen,Storage,2.86,4.88,68
+47,SKU-1047,Term Writing,Office Supplies,Writing,279.24,600.27,81
+48,SKU-1048,Almost Outerwear,Apparel,Outerwear,77.58,115.05,17
+49,SKU-1049,Support Fastener,Tools & Hardware,Fasteners,217.79,473.12,17
+50,SKU-1050,Four Component,Electronics,Components,191.76,459.3,77
+51,SKU-1051,Institution Cookware,Home & Kitchen,Cookware,384.39,501.3,33
+52,SKU-1052,Executive Component,Electronics,Components,29.05,67.41,61
+53,SKU-1053,Attorney Component,Electronics,Components,99.99,197.27,89
+54,SKU-1054,Development Accessorie,Electronics,Accessories,263.63,510.07,50
+55,SKU-1055,White Paper Good,Office Supplies,Paper Goods,268.55,431.95,43
+56,SKU-1056,Yes Outerwear,Apparel,Outerwear,269.33,428.23,50
+57,SKU-1057,Our Audio,Electronics,Audio,184.4,460.63,22
+58,SKU-1058,Under Component,Electronics,Components,86.84,134.15,54
+59,SKU-1059,Serious Audio,Electronics,Audio,149.07,209.45,79
+60,SKU-1060,Forward Furniture,Office Supplies,Furniture,393.57,885.23,77
+61,SKU-1061,Difference Component,Electronics,Components,327.21,520.0,94
+62,SKU-1062,Reality Audio,Electronics,Audio,107.26,252.77,80
+63,SKU-1063,Money Storage,Home & Kitchen,Storage,114.14,168.22,53
+64,SKU-1064,Individual Small Appliance,Home & Kitchen,Small Appliances,254.43,392.63,72
+65,SKU-1065,Usually Paper Good,Office Supplies,Paper Goods,38.73,67.8,45
+66,SKU-1066,Who Audio,Electronics,Audio,134.76,184.63,43
+67,SKU-1067,Question Small Appliance,Home & Kitchen,Small Appliances,177.85,376.57,81
+68,SKU-1068,Low Audio,Electronics,Audio,31.95,75.02,29
+69,SKU-1069,Character Hand Tool,Tools & Hardware,Hand Tools,334.17,654.06,28
+70,SKU-1070,Evidence Outerwear,Apparel,Outerwear,18.65,31.22,15
+71,SKU-1071,Chair Paper Good,Office Supplies,Paper Goods,273.46,565.25,55
+72,SKU-1072,Employee Power Tool,Tools & Hardware,Power Tools,389.59,847.09,40
+73,SKU-1073,Size Cookware,Home & Kitchen,Cookware,352.8,434.73,52
+74,SKU-1074,Option Accessorie,Apparel,Accessories,345.9,779.65,44
+75,SKU-1075,Nothing Small Appliance,Home & Kitchen,Small Appliances,45.02,105.07,70
+76,SKU-1076,Everyone Cookware,Home & Kitchen,Cookware,327.0,588.07,49
+77,SKU-1077,Skin Cookware,Home & Kitchen,Cookware,11.42,16.57,52
+78,SKU-1078,Pattern Paper Good,Office Supplies,Paper Goods,386.82,604.55,92
+79,SKU-1079,Later Power Tool,Tools & Hardware,Power Tools,272.45,625.75,52
+80,SKU-1080,Water Audio,Electronics,Audio,351.06,540.48,84
+81,SKU-1081,Past Paper Good,Office Supplies,Paper Goods,45.14,79.67,50
+82,SKU-1082,Inside Accessorie,Apparel,Accessories,393.73,531.67,83
+83,SKU-1083,High Storage,Home & Kitchen,Storage,19.67,34.75,76
+84,SKU-1084,Discuss Fastener,Tools & Hardware,Fasteners,288.33,624.1,95
+85,SKU-1085,Certainly Storage,Home & Kitchen,Storage,173.66,422.61,52
+86,SKU-1086,Mr Power Tool,Tools & Hardware,Power Tools,266.03,362.34,48
+87,SKU-1087,Minute Power Tool,Tools & Hardware,Power Tools,267.42,434.3,99
+88,SKU-1088,Benefit Furniture,Office Supplies,Furniture,52.66,91.97,58
+89,SKU-1089,Someone Small Appliance,Home & Kitchen,Small Appliances,228.5,394.82,10
+90,SKU-1090,Anyone Writing,Office Supplies,Writing,85.65,190.27,87
+91,SKU-1091,Traditional Writing,Office Supplies,Writing,177.83,369.59,75
+92,SKU-1092,Break Accessorie,Apparel,Accessories,69.54,91.11,75
+93,SKU-1093,Claim Power Tool,Tools & Hardware,Power Tools,39.17,95.48,40
+94,SKU-1094,Product Paper Good,Office Supplies,Paper Goods,323.01,449.49,15
+95,SKU-1095,Collection Storage,Home & Kitchen,Storage,245.29,539.4,68
+96,SKU-1096,Structure Accessorie,Apparel,Accessories,231.12,493.18,59
+97,SKU-1097,Response Footwear,Apparel,Footwear,99.11,203.46,10
+98,SKU-1098,Knowledge Accessorie,Electronics,Accessories,89.1,200.06,99
+99,SKU-1099,Pick Power Tool,Tools & Hardware,Power Tools,21.99,33.51,25
+100,SKU-1100,Attack Outerwear,Apparel,Outerwear,320.96,663.7,81
+101,SKU-1101,Image Power Tool,Tools & Hardware,Power Tools,380.12,896.65,88
+102,SKU-1102,I Power Tool,Tools & Hardware,Power Tools,332.57,635.95,30
+103,SKU-1103,Pick Footwear,Apparel,Footwear,105.16,159.99,91
+104,SKU-1104,Management Furniture,Office Supplies,Furniture,194.87,294.45,66
+105,SKU-1105,Newspaper Component,Electronics,Components,115.72,179.74,50
+106,SKU-1106,Enter Hand Tool,Tools & Hardware,Hand Tools,57.07,85.64,98
+107,SKU-1107,On Small Appliance,Home & Kitchen,Small Appliances,87.15,151.58,52
+108,SKU-1108,Traditional Power Tool,Tools & Hardware,Power Tools,167.48,246.01,63
+109,SKU-1109,Yes Accessorie,Apparel,Accessories,378.53,463.85,83
+110,SKU-1110,Activity Footwear,Apparel,Footwear,4.35,7.21,59
+111,SKU-1111,Response Accessorie,Apparel,Accessories,299.51,572.06,87
+112,SKU-1112,Set Storage,Home & Kitchen,Storage,89.33,157.81,13
+113,SKU-1113,Building Footwear,Apparel,Footwear,268.21,600.14,31
+114,SKU-1114,Rest Outerwear,Apparel,Outerwear,392.33,743.21,60
+115,SKU-1115,Value Fastener,Tools & Hardware,Fasteners,265.87,348.06,64
+116,SKU-1116,Not Storage,Home & Kitchen,Storage,74.33,114.33,51
+117,SKU-1117,Social Storage,Home & Kitchen,Storage,132.08,289.2,58
+118,SKU-1118,Example Writing,Office Supplies,Writing,102.4,133.78,12
+119,SKU-1119,Specific Hand Tool,Tools & Hardware,Hand Tools,399.96,661.91,93
+120,SKU-1120,Put Component,Electronics,Components,18.02,22.35,41
+10096,SKU-1096,Structure Accessorie,Apparel,Accessories,231.12,493.18,59
+10055,SKU-1055,White Paper Good,Office Supplies,Paper Goods,268.55,431.95,43
+10060,SKU-1060,Forward Furniture,Office Supplies,Furniture,393.57,885.23,77
+10118,SKU-1118,Example Writing,Office Supplies,Writing,102.4,133.78,12

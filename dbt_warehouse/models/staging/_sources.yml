@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: dim_date
+      - name: dim_warehouse
+      - name: dim_supplier
+      - name: dim_product
+      - name: dim_movement_type
+      - name: fact_inventory_movement
+      - name: fact_stock_snapshot

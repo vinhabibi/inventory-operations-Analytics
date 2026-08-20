@@ -1,0 +1,6 @@
+movement_type_key,movement_type
+1,inbound
+2,outbound
+3,transfer
+4,return
+5,adjustment

@@ -1,0 +1,1 @@
+select * from "inventory_warehouse"."dbt_dev_staging"."stg_fact_stock_snapshot"
